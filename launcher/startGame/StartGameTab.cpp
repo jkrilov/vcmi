@@ -234,7 +234,6 @@ void StartGameTab::refreshUpdateStatus(EGameUpdateStatus status)
 	ui->buttonUpdateCheck->setVisible(status == EGameUpdateStatus::NOT_CHECKED);
 	ui->labelUpdateNotFound->setVisible(status == EGameUpdateStatus::NO_UPDATE);
 	ui->labelUpdateAvailable->setVisible(status == EGameUpdateStatus::UPDATE_AVAILABLE);
-	ui->buttonOpenChangelog->setVisible(status == EGameUpdateStatus::UPDATE_AVAILABLE);
 	ui->buttonOpenDownloads->setVisible(status == EGameUpdateStatus::UPDATE_AVAILABLE);
 
 	if (status == EGameUpdateStatus::UPDATE_AVAILABLE)
@@ -249,7 +248,7 @@ void StartGameTab::on_buttonGameStart_clicked()
 
 void StartGameTab::on_buttonOpenChangelog_clicked()
 {
-	QDesktopServices::openUrl(QUrl("https://vcmi.eu/ChangeLog/"));
+	QDesktopServices::openUrl(QUrl("https://github.com/vcmi/vcmi/blob/master/ChangeLog.md"));
 }
 
 void StartGameTab::on_buttonOpenDownloads_clicked()

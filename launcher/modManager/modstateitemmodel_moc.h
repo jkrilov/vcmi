@@ -24,6 +24,7 @@ enum EModFields
 	STATUS_UPDATE,
 	TYPE,
 	STARS,
+	UPDATE_DATE,
 	COUNT
 };
 }

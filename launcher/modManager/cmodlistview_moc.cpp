@@ -88,6 +88,7 @@ void CModListView::setupModsView()
 	ui->allModsView->header()->setSectionResizeMode(ModFields::STATUS_ENABLED, QHeaderView::Fixed);
 	ui->allModsView->header()->setSectionResizeMode(ModFields::STATUS_UPDATE, QHeaderView::Fixed);
 	ui->allModsView->header()->setSectionResizeMode(ModFields::STARS, QHeaderView::Fixed);
+	ui->allModsView->setColumnWidth(ModFields::UPDATE_DATE, 110);
 
 	QSettings s = CLauncherDirs::getSettings(Ui::appName);
 	auto state = s.value("AllModsView/State").toByteArray();
@@ -277,7 +278,11 @@ QString CModListView::genChangelogText(const ModState & mod)
 
 	for(const auto & version : versions)
 	{
-		result += headerTemplate.arg(version);
+		const auto date = mod.getReleaseDate(version);
+		const auto heading = date.isValid()
+			? QString("%1 (%2)").arg(version, QLocale().toString(date.date(), QLocale::ShortFormat))
+			: version;
+		result += headerTemplate.arg(heading);
 		result += entryBegin;
 		for(const auto & line : changelog.value(version))
 			result += entryLine.arg(line);

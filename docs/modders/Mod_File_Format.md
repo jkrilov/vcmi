@@ -89,6 +89,10 @@
 }
 ```
 
+## Release dates in the launcher
+
+The mod repository supplies `updateDate` as the latest release timestamp in UTC ISO 8601 format. The launcher shows this date in the **Last updated** column and in parentheses beside the matching changelog version, using local time and date formatting. Older changelog versions and mods without a release timestamp remain undated; the changelog format does not contain historical release dates.
+
 ## Fields with description of mod content
 
 These are fields that are present only in local mod.json file

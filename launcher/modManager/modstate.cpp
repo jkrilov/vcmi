@@ -145,15 +145,20 @@ QString ModState::getVersion() const
 
 QString ModState::getUpdateDate() const
 {
-	// repository date describes repository version, which may differ from installed one
-	if (getRepositoryVersion() != getVersion())
-		return {};
-
-	QDateTime date = QDateTime::fromString(QString::fromStdString(impl.getRepositoryValue("updateDate").String()), Qt::ISODate);
+	QDateTime date = getReleaseDate(getVersion());
 	if (!date.isValid())
 		return {};
 
 	return QString::fromStdString(TextOperations::getFormattedDateTimeLocal(date.toSecsSinceEpoch()));
+}
+
+QDateTime ModState::getReleaseDate(const QString & version) const
+{
+	// Repository metadata contains a date only for the repository version.
+	if (version.isEmpty() || version != getRepositoryVersion())
+		return {};
+
+	return QDateTime::fromString(QString::fromStdString(impl.getRepositoryValue("updateDate").String()), Qt::ISODate).toLocalTime();
 }
 
 int ModState::getGithubStars() const

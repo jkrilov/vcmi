@@ -83,6 +83,9 @@ QVariant ModStateItemModel::getValue(const ModState & mod, int field) const
 		case ModFields::STARS:
 			return mod.getGithubStars() == -1 ? QVariant("") : mod.getGithubStars();
 
+		case ModFields::UPDATE_DATE:
+			return mod.getReleaseDate(mod.getRepositoryVersion());
+
 		default:
 			return QVariant();
 	}
@@ -95,6 +98,11 @@ QVariant ModStateItemModel::getText(const ModState & mod, int field) const
 	case ModFields::STATUS_ENABLED:
 	case ModFields::STATUS_UPDATE:
 		return "";
+	case ModFields::UPDATE_DATE:
+	{
+		const auto date = getValue(mod, field).toDateTime();
+		return date.isValid() ? QLocale().toString(date.date(), QLocale::ShortFormat) : QString();
+	}
 	default:
 		return getValue(mod, field);
 	}
@@ -198,6 +206,7 @@ QVariant ModStateItemModel::headerData(int section, Qt::Orientation orientation,
 		QT_TRANSLATE_NOOP("ModFields", ""), // status icon
 		QT_TRANSLATE_NOOP("ModFields", "Type"),
 		QT_TRANSLATE_NOOP("ModFields", ""), // star icon
+		QT_TRANSLATE_NOOP("ModFields", "Last updated"),
 	};
 
 	if(orientation == Qt::Horizontal)
@@ -224,7 +233,7 @@ void ModStateItemModel::modChanged(QString modID)
 	int index = modNameToID.indexOf(modID);
 	QModelIndex parent = this->parent(createIndex(0, 0, index));
 	int row = modIndex[modIndexToName(parent)].indexOf(modID);
-	dataChanged(createIndex(row, 0, index), createIndex(row, 4, index));
+	dataChanged(createIndex(row, 0, index), createIndex(row, ModFields::COUNT - 1, index));
 }
 
 void ModStateItemModel::endResetModel()
