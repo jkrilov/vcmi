@@ -315,6 +315,17 @@ vcmi_set_output_dir(vcmitest "")
 
 enable_pch(vcmitest)
 
+if(ENABLE_LAUNCHER)
+	add_executable(vcmilaunchertest
+		launcher/ModStateTest.cpp
+		../launcher/modManager/modstate.cpp
+	)
+	target_include_directories(vcmilaunchertest PRIVATE ../launcher)
+	target_link_libraries(vcmilaunchertest PRIVATE gtest_main vcmi Qt${QT_VERSION_MAJOR}::Widgets)
+	vcmi_set_output_dir(vcmilaunchertest "")
+	add_test(NAME LauncherModState COMMAND vcmilaunchertest)
+endif()
+
 file (GLOB_RECURSE testdata "testdata/*.*")
 foreach(resource ${testdata})
 	get_filename_component(filename ${resource} NAME)

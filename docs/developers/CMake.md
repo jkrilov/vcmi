@@ -19,3 +19,5 @@
   * Speeds up recompilation
 * `-G Ninja`
   * Use Ninja build system instead of Make, which speeds up the build and doesn't require a `-j` flag
+* `-D ENABLE_TEST=ON`
+  * Builds the GoogleTest targets. With `ENABLE_LAUNCHER=ON`, build `vcmilaunchertest` and run `ctest --test-dir build -R "^LauncherModState$" --output-on-failure` to check launcher release-date handling without game assets.
