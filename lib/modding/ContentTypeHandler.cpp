@@ -37,6 +37,7 @@
 #include "../constants/StringConstants.h"
 #include "../TerrainHandler.h"
 #include "../MapLayerHandler.h"
+#include "../entities/RumorTypeHandler.h"
 #include "../json/JsonUtils.h"
 #include "../mapObjectConstructors/CObjectClassesHandler.h"
 #include "../rmg/CRmgTemplateStorage.h"
@@ -101,6 +102,13 @@ bool ContentTypeHandler::loadMod(const std::string & modName, bool validate)
 	{
 		for (auto & objectPatch : objectPatches)
 		{
+			const JsonNode & target = modInfo.modData[objectName];
+			if (objectPatch.isNull() && target.isStruct() && vstd::contains(target.Struct(), "index"))
+			{
+				logMod->error("Mod '%s' attempts to remove object '%s' of type '%s' from mod '%s', but objects from original game can not be removed!", objectPatch.getModScope(), objectName, entityName, modName);
+				continue;
+			}
+
 			if (context.validation != EContentValidation::OFF && !modInfo.modData[objectName].isNull())
 				JsonUtils::detectConflicts(conflictList, modInfo.modData[objectName], objectPatch, objectName);
 
@@ -124,6 +132,10 @@ bool ContentTypeHandler::loadMod(const std::string & modName, bool validate)
 			logMod->warn("Mod '%s' attempts to edit object '%s' of type '%s' from mod '%s' but no such object exist!", data.getModScope(), name, entityName, modName);
 			continue;
 		}
+
+		// object was removed by a patch that set it to null
+		if (data.isNull())
+			continue;
 
 		bool hasIndex = vstd::contains(data.Struct(), "index") && !data["index"].isNull();
 
@@ -276,6 +288,7 @@ void CContentHandler::init()
 	handlers.insert(std::make_pair("biomes", ContentTypeHandler(context, context.lib.biomeHandler.get(), "biome")));
 	handlers.insert(std::make_pair("resources", ContentTypeHandler(context, context.lib.resourceTypeHandler.get(), "resources")));
 	handlers.insert(std::make_pair("mapLayers", ContentTypeHandler(context, context.lib.mapLayerHandler.get(), "mapLayer")));
+	handlers.insert(std::make_pair("rumors", ContentTypeHandler(context, context.lib.rumorHandler.get(), "rumor")));
 }
 
 std::vector<std::string> CContentHandler::getContentTypeNames() const

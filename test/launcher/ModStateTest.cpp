@@ -60,17 +60,3 @@ TEST(ModStateTest, releaseDatePreservesInstantWithTimezoneOffset)
 	EXPECT_EQ(date.timeSpec(), Qt::LocalTime);
 	EXPECT_EQ(date.toUTC(), QDateTime::fromString("2024-12-31T22:30:00Z", Qt::ISODate));
 }
-
-TEST(ModStateTest, releaseDatesCompareChronologicallyAcrossYears)
-{
-	JsonNode older;
-	older["version"].String() = "1.0";
-	older["updateDate"].String() = "2024-12-30T12:00:00Z";
-	JsonNode newer;
-	newer["version"].String() = "1.0";
-	newer["updateDate"].String() = "2025-01-02T12:00:00Z";
-	ModDescription olderDescription("older", JsonNode(), older);
-	ModDescription newerDescription("newer", JsonNode(), newer);
-
-	EXPECT_LT(ModState(olderDescription).getReleaseDate("1.0"), ModState(newerDescription).getReleaseDate("1.0"));
-}

@@ -45,6 +45,7 @@ set(test_SRCS
 		game/HeroRecruitmentTest.cpp
 		game/HeroMovementTest.cpp
 		game/HeroSecondarySkillsTest.cpp
+		game/StartingHeroTest.cpp
 		game/MovementCostTest.cpp
 		game/SaveGameTest.cpp
 		game/VictoryLossTest.cpp
@@ -112,6 +113,7 @@ set(test_SRCS
  		spells/targetConditions/SpellEffectConditionTest.cpp
  		spells/targetConditions/TargetConditionItemFixture.cpp
 
+		server/lobby/ScenarioListBuilderTest.cpp
 		server/battles/AcidBreathTest.cpp
 		server/battles/ActionOptionsTest.cpp
 		server/battles/AttackSequenceTest.cpp
@@ -144,6 +146,7 @@ set(test_SRCS
 		server/activities/ActivityProcessorTest.cpp
 		server/ArmyManagementTest.cpp
 		server/NeutralTownEventsTest.cpp
+		server/TavernRumorsTest.cpp
 
 		texts/TextOperationsTest.cpp
 
@@ -316,6 +319,7 @@ vcmi_set_output_dir(vcmitest "")
 enable_pch(vcmitest)
 
 if(ENABLE_LAUNCHER)
+	# Launcher date tests need Qt but no game assets; keep Qt out of core test dependencies.
 	add_executable(vcmilaunchertest
 		launcher/ModStateTest.cpp
 		../launcher/modManager/modstate.cpp

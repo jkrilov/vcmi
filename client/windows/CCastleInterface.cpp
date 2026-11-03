@@ -393,7 +393,7 @@ std::string CBuildingRect::getSubtitle()//hover text for building
 		if(availableCreatures.size())
 		{
 			int creaID = availableCreatures.back();//taking last of available creatures
-			return LIBRARY->generaltexth->allTexts[16] + " " + LIBRARY->creh->objects.at(creaID)->getNamePluralTranslated();
+			return LIBRARY->generaltexth->allTexts[16] + " " + (*LIBRARY->creh)[creaID]->getNamePluralTranslated();
 		}
 		else
 		{
@@ -1256,9 +1256,9 @@ void CCastleBuildings::enterTownHall()
 		}
 		else
 		{
-			GAME->interface()->showInfoDialog(LIBRARY->generaltexth->allTexts[673]);
-			assert(ENGINE->windows().topWindow<CInfoWindow>() != nullptr);
-			ENGINE->windows().topWindow<CInfoWindow>()->buttons[0]->addCallback(std::bind(&CCastleBuildings::openTownHall, this));
+			auto infoWindow = CInfoWindow::create(LIBRARY->generaltexth->allTexts[673], GAME->interface()->playerID);
+			infoWindow->buttons[0]->addCallback(std::bind(&CCastleBuildings::openTownHall, this));
+			ENGINE->windows().pushWindow(infoWindow);
 		}
 	}
 	else
